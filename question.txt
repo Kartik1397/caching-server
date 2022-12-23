@@ -1,0 +1,81 @@
+Machine round question
+===
+
+Write a TCP server that provides the following functionality:
+
+1. Be able to communicate over TCP with a client such as `nc` (netcat),
+`telnet`, or a custom TCP client.
+
+2. Provide echo functionality:
+Command: "ECHO <string>"
+Expected response: "<string>"
+
+3. Allow data to be stored:
+Command: "SET <key> <value>"
+Expected response: "!200"
+Errors:
+- if store is full: "!500"
+- if syntax error: "!400"
+
+4. Allow data to be retrieved:
+Command: "GET <key>"
+Expected response: "<value>"
+Errors:
+- if key not found (ie., not previously set): "!404"
+- if syntax error: "!400"
+
+5. Allow setting tags with keys:
+Command: "SET <key> <value> <tag1> <tag2> <...tagN>"
+Expected behaviour is same as (3)
+
+6. Allow data to be retrieved with tags:
+Command: "GETWITHTAGS <key>"
+Expected response: "<value> [<tag1> <tag2> <...tagN>]"
+Other behaviour similar to (4)
+
+7. Load into your datastore a file _on the server_:
+Command: "LOAD <filename>"
+Example: "LOAD scores.db"
+Expected response: "!200" if load succeeds. "!500" if an error occurs
+
+8. List keys with a specific tag:
+Command: "LISTKEYSWITHTAG EXACT <tagname>"
+Expected response: "[<key1> <key2> <...key3>]"
+Errors:
+- if tag not found (or there exists no keys with that tag): "!404"
+
+9. Aggregation functionality:
+Support COUNT, MAX, MIN, AVG, SUM.
+Command: "COUNT TAG <tag>"
+Response: "<result-value>", where result-value is the result of the
+aggregation function.
+For example, if the current state of the datastore was:
+---
+key1 30 tagR
+key2 40 tagQ
+key3 20 tagR
+---
+then "AVG TAG tagR" would respond with "25".
+
+### Notes
+1. It isn't necessary to preserve the values in the datastore 
+2. There is a command called `checker.py` that will test
+your code. You will be able to test your code by running the command,
+`checker.py <port>`, where the <port> is the port number where your
+TCP server is currently listening. Test this by running `checker.py 8000`. This should report
+"Percentage solved: 0.00%"
+3. Ensure that your program follows the spec below exactly since the
+checker is automated.
+4. Test often.
+5. Listen for instructions on the Zoom call.
+
+
+### Table of control codes
+| meaning                                  | control code|
+| --------                                 |   -------- |
+| generic error                            |        500 |
+| invalid input or parsing error           |        400 |
+| input too large                          |        413 |
+| key not found                            |        404 |
+| error loading .db - no such file?        |        404 |
+| OK (but no data response)                |        200 |
