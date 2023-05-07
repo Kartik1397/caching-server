@@ -1,6 +1,6 @@
 # Caching Server
 
-A simple caching server developed within 3 hours for a hiring challange. Full problem statement can be found in [question.txt](https://github.com/Kartik1397/async-caching-server-python/blob/main/question.txt)
+A simple caching server developed within 3 hours for a hiring challange. Full problem statement can be found in [question.txt](https://github.com/Kartik1397/async-caching-server-python/blob/main/question.txt).
 
 # Testing
 
