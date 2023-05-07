@@ -231,6 +231,7 @@ async def handle_client(reader, writer):
 
 async def main(host, port):
     server = await asyncio.start_server(handle_client, host, port)
+    print(f"Listening on {host}:{port}")
     await server.serve_forever()
 
 asyncio.run(main('localhost', 8000))
