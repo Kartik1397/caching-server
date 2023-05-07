@@ -18,7 +18,7 @@ class Operation(str, Enum):
 key_value_store = {}
 key_tag_store = {}
 tag_key_store = {}
-MAX_KEYS = 100 
+MAX_KEYS = 100
 
 def is_all_ints(values):
     for x in values:
