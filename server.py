@@ -1,4 +1,18 @@
 import asyncio
+from enum import Enum
+
+class Operation(str, Enum):
+    ECHO = 'ECHO'
+    SET = 'SET'
+    GET = 'GET'
+    GETWITHTAGS = 'GETWITHTAGS'
+    LISTKEYSWITHTAG = 'LISTKEYSWITHTAG'
+    LOAD = 'LOAD'
+    COUNT = 'COUNT'
+    MAX = 'MAX'
+    MIN = 'MIN'
+    AVG = 'AVG'
+    SUM = 'SUM'
 
 # key-value store
 key_value_store = {}
@@ -73,24 +87,24 @@ def agg(op, tag):
     if (tag in tag_key_store) == False:
         return '!404'
     values = [key_value_store[key] for key in tag_key_store[tag]]
-    if op == 'COUNT':
+    if op == Operation.COUNT:
         return str(len(values))
-    elif op == 'MAX':
+    elif op == Operation.MAX:
         if is_all_ints(values):
             return str(max(to_floats(values)))
         else:
             return '!400'
-    elif op == 'MIN':
+    elif op == Operation.MIN:
         if is_all_ints(values):
             return str(min(to_floats(values)))
         else:
             return '!400'
-    elif op == 'AVG':
+    elif op == Operation.AVG:
         if is_all_ints(values):
             return str(sum(to_floats(values))/len(values))
         else:
             return '!400'
-    elif op == 'SUM':
+    elif op == Operation.SUM:
         if is_all_ints(values):
             return str(sum(to_floats(values)))
         else:
@@ -146,10 +160,10 @@ async def process(writer, instruction):
     instruction.strip()
     tokens = instruction.split(' ', 1)
     operation = tokens[0].strip()
-    if operation == 'ECHO':
+    if operation == Operation.ECHO:
         operand = tokens[1]
         await handle_echo(writer, operand.strip())
-    elif operation == 'SET':
+    elif operation == Operation.SET:
         if len(tokens) < 2:
             await handle_syntax_error(writer)
             return
@@ -161,19 +175,19 @@ async def process(writer, instruction):
             await handle_set(writer, operands[0].strip(), operands[1].strip())
         else:
             await handle_set(writer, operands[0].strip(), operands[1].strip(), operands[2].split())
-    elif operation == 'GET':
+    elif operation == Operation.GET:
         if len(tokens) < 2:
             await handle_syntax_error(writer)
             return
         operand = tokens[1].split(' ', 1)[0]
         await handle_get(writer, operand.strip())
-    elif operation == 'GETWITHTAGS':
+    elif operation == Operation.GETWITHTAGS:
         if len(tokens) < 2:
             await handle_syntax_error(writer)
             return
         operand = tokens[1].split(' ', 1)[0]
         await handle_getwithtags(writer, operand.strip())
-    elif operation == 'LISTKEYSWITHTAG':
+    elif operation == Operation.LISTKEYSWITHTAG:
         if len(tokens) < 2:
             await handle_syntax_error(writer)
             return
@@ -182,18 +196,18 @@ async def process(writer, instruction):
             await handle_syntax_error(writer)
             return
         await handle_listkeyswithtag(writer, operands[1].strip())
-    elif operation == 'LOAD':
+    elif operation == Operation.LOAD:
         if len(tokens) < 2:
             await handle_syntax_error(writer)
             return
         operand = tokens[1].split(' ', 1)[0]
         await handle_load(writer, operand.strip())
     elif (
-        operation == 'COUNT' or
-        operation == 'MAX' or
-        operation == 'MIN' or
-        operation == 'AVG' or
-        operation == 'SUM'
+        operation == Operation.COUNT or
+        operation == Operation.MAX or
+        operation == Operation.MIN or
+        operation == Operation.AVG or
+        operation == Operation.SUM
     ):
         if len(tokens) < 2:
             await handle_syntax_error(writer)
