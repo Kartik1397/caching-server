@@ -1,5 +1,15 @@
 import asyncio
+import os
 from enum import Enum
+
+HOST = os.environ.get('HOST', 'localhost')
+PORT = os.environ.get('PORT', 8000)
+
+# key-value store
+key_value_store = {}
+key_tag_store = {}
+tag_key_store = {}
+MAX_KEYS = 100
 
 class Operation(str, Enum):
     ECHO = 'ECHO'
@@ -13,12 +23,6 @@ class Operation(str, Enum):
     MIN = 'MIN'
     AVG = 'AVG'
     SUM = 'SUM'
-
-# key-value store
-key_value_store = {}
-key_tag_store = {}
-tag_key_store = {}
-MAX_KEYS = 100
 
 def is_all_ints(values):
     for x in values:
@@ -234,4 +238,4 @@ async def main(host, port):
     print(f"Listening on {host}:{port}")
     await server.serve_forever()
 
-asyncio.run(main('localhost', 8000))
+asyncio.run(main(HOST, PORT))
