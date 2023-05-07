@@ -32,7 +32,6 @@ def to_floats(values):
     return [float(x) for x in values]
 
 def add(key, value, tags):
-    ### pendig.append(key, value, tags)
     if len(key_value_store.keys()) >= MAX_KEYS:
         return '!500'
     key_value_store[key] = value
@@ -40,7 +39,7 @@ def add(key, value, tags):
     for tag in tags:
         if (tag in tag_key_store) == False:
             tag_key_store[tag] = []
-        tag_key_store[tag].append(key) # append = O(1), set = O(log(size_of_set))
+        tag_key_store[tag].append(key)
     return '!200'
 
 def get(key):
